@@ -1,0 +1,36 @@
+using System.ComponentModel;
+using APP.Domain;
+using CORE.APP.Models;
+
+namespace APP.Models;
+
+public class UserResponse : Response
+{
+    [DisplayName("User Name")]
+    public string UserName { get; set; }
+
+    public string Password { get; set; }
+
+    [DisplayName("First Name")]
+    public string FirstName { get; set; }
+
+    [DisplayName("Last Name")]
+    public string LastName { get; set; }
+
+    public Genders Gender { get; set; }
+
+    public DateTime? BirthDate { get; set; }
+
+    public DateTime RegistrationDate { get; set; }
+
+    public decimal Score { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public string Address { get; set; }
+
+    public int? GroupId { get; set; }
+
+    public List<int> RoleIds { get; set; }
+    
+}
