@@ -28,7 +28,7 @@ public class User : Entity
 
     public bool IsActive { get; set; }
 
-    public string Address { get; set; }
+    public string? Address { get; set; }
 
     //public int? CountryId { get; set; }
 
@@ -44,6 +44,8 @@ public class User : Entity
 
 
     public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    
+    public List<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
 
     [NotMapped]
     public List<int> RoleIds
