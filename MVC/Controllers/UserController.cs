@@ -13,6 +13,7 @@ namespace MVC.Controllers
         // Service injections:
         private readonly IService<UserRequest, UserResponse> _userService;
         private readonly IService<GroupRequest, GroupResponse> _groupService;
+        private readonly IService<RoleRequest, RoleResponse> _roleService;
 
         /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
         //private readonly IService<EntityRequest, EntityResponse> _EntityService;
@@ -20,6 +21,7 @@ namespace MVC.Controllers
         public UserController(
 			IService<UserRequest, UserResponse> userService
             , IService<GroupRequest, GroupResponse> groupService
+            , IService<RoleRequest, RoleResponse> roleService
 
             /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
             //, IService<EntityRequest, EntityResponse> EntityService
@@ -27,6 +29,7 @@ namespace MVC.Controllers
         {
             _userService = userService;
             _groupService = groupService;
+            _roleService = roleService;
 
             /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
             //_EntityService = EntityService;
@@ -40,8 +43,9 @@ namespace MVC.Controllers
             */
 
             // Related items service logic to set ViewData (Id and Name parameters may need to be changed in the SelectList constructor according to the model):
-            ViewData["GroupId"] = new SelectList(_groupService.List(), "Id", "Name");
-            
+            ViewData["GroupId"] = new SelectList(_groupService.List(), "Id", "Title");
+            ViewBag.RoleIds = new MultiSelectList(_roleService.List(), "Id", "Name");
+
             /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
             //ViewBag.EntityIds = new MultiSelectList(_EntityService.List(), "Id", "Name");
         }

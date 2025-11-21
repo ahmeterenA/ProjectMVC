@@ -6,19 +6,9 @@
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
     var dateTimePickerClass = "datetimepicker"; // "jquery-datetimepicker" must be added as client side library
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "Role Create";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Role Create</title>
-</head>
-<body>
 <div class="@containerDivClass">
     @if (TempData["Message"] is not null)
     {
@@ -63,6 +53,3 @@
         </div>
     </form>
 </div>  
-
-</body>
-</html>

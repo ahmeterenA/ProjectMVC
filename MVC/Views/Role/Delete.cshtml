@@ -5,19 +5,9 @@
 
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "Role Delete";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Role Delete</title>
-</head>
-<body>
 @if (Model is not null)
 {
 <div class="@containerDivClass">
@@ -63,5 +53,3 @@
     </form>
 </div>
 }
-</body>
-</html>

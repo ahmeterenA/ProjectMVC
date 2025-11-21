@@ -5,19 +5,9 @@
 
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "User List";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>User List</title>
-</head>
-<body>
 @if (Model is not null)
 {
     <form asp-action="Index" autocomplete="off">
@@ -45,34 +35,19 @@
                             @Html.DisplayNameFor(model => model.UserName)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Password)
+                            @Html.DisplayNameFor(model => model.FullName)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.FirstName)
+                            @Html.DisplayNameFor(model => model.RegistrationDateF)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.LastName)
+                            @Html.DisplayNameFor(model => model.IsActiveF)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Gender)
+                            @Html.DisplayNameFor(model => model.Group)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.BirthDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.RegistrationDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Score)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.IsActive)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Address)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.RoleIds)
+                            @Html.DisplayNameFor(model => model.Roles)
                         </th>
                         <th></th>
                     </tr>
@@ -84,34 +59,19 @@
 						        @Html.DisplayFor(modelItem => item.UserName)
 					        </td>
 					        <td>
-						        @Html.DisplayFor(modelItem => item.Password)
+						        @Html.DisplayFor(modelItem => item.FullName)
 					        </td>
 					        <td>
-						        @Html.DisplayFor(modelItem => item.FirstName)
+						        @Html.DisplayFor(modelItem => item.RegistrationDateF)
 					        </td>
 					        <td>
-						        @Html.DisplayFor(modelItem => item.LastName)
+						        @Html.DisplayFor(modelItem => item.IsActiveF)
 					        </td>
 					        <td>
-						        @Html.DisplayFor(modelItem => item.Gender)
+						        @Html.DisplayFor(modelItem => item.Group)
 					        </td>
 					        <td>
-						        @Html.DisplayFor(modelItem => item.BirthDate)
-					        </td>
-					        <td>
-						        @Html.DisplayFor(modelItem => item.RegistrationDate)
-					        </td>
-					        <td>
-						        @Html.DisplayFor(modelItem => item.Score)
-					        </td>
-					        <td>
-						        @Html.DisplayFor(modelItem => item.IsActive)
-					        </td>
-					        <td>
-						        @Html.DisplayFor(modelItem => item.Address)
-					        </td>
-					        <td>
-						        @Html.DisplayFor(modelItem => item.RoleIds)
+						        @string.Join(", ", item.Roles)
 					        </td>
 					        <td class="text-end w-25">
 						        <a asp-action="Details" asp-route-id="@item.Id">Details</a>&nbsp;|&nbsp;
@@ -125,5 +85,3 @@
         </div>
     </form>
 }
-</body>
-</html>

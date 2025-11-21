@@ -5,19 +5,9 @@
 
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "User Details";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>User Details</title>
-</head>
-<body>
 @if (Model is not null)
 {
 <div class="@containerDivClass">
@@ -40,26 +30,10 @@
     </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.Password)
+            @Html.DisplayNameFor(model => model.FullName)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.Password)
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </div>
-        <div class="col-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.LastName)
-        </div>
-        <div class="col-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.FullName)
         </div>
     </div>
     <div class="row mb-3">
@@ -72,34 +46,34 @@
     </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.BirthDate)
+            @Html.DisplayNameFor(model => model.BirthDateF)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.BirthDate)
+            @Html.DisplayFor(model => model.BirthDateF)
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.RegistrationDate)
+            @Html.DisplayNameFor(model => model.RegistrationDateF)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.RegistrationDate)
+            @Html.DisplayFor(model => model.RegistrationDateF)
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.Score)
+            @Html.DisplayNameFor(model => model.ScoreF)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.Score)
+            @Html.DisplayFor(model => model.ScoreF)
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.IsActive)
+            @Html.DisplayNameFor(model => model.IsActiveF)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.IsActive)
+            @Html.DisplayFor(model => model.IsActiveF)
         </div>
     </div>
     <div class="row mb-3">
@@ -110,20 +84,20 @@
             @Html.DisplayFor(model => model.Address)
         </div>
     </div>
-   @* <div class="row mb-3">
+    <div class="row mb-3">
         <div class="col-2 fw-bold">
             @Html.DisplayNameFor(model => model.Group)
         </div>
         <div class="col-10">
             @Html.DisplayFor(model => model.Group)
         </div>
-    </div>*@
+    </div>
     <div class="row mb-3">
         <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.RoleIds)
+            @Html.DisplayNameFor(model => model.Roles)
         </div>
         <div class="col-10">
-            @Html.DisplayFor(model => model.RoleIds)
+            @string.Join(", ", Model.Roles)
         </div>
     </div>
 
@@ -146,5 +120,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 }
-</body>
-</html>

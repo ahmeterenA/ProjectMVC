@@ -291,3 +291,6 @@
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/bin/Debug/net8.0/APP.pdb
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/bin/Debug/net8.0/CORE.pdb
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Design.dll
+/Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/obj/Debug/net8.0/MVC.sourcelink.json
+/Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/bin/Debug/net8.0/package-lock.json
+/Users/ahmeteren/RiderProjects/AhmetEren_HW/MVC/bin/Debug/net8.0/package.json

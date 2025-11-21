@@ -5,19 +5,9 @@
 
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "Role List";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Role List</title>
-</head>
-<body>
 @if (Model is not null)
 {
     <form asp-action="Index" autocomplete="off">
@@ -65,5 +55,3 @@
         </div>
     </form>
 }
-</body>
-</html>

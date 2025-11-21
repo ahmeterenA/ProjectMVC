@@ -42,6 +42,16 @@ namespace CORE.APP.Services
 
         protected virtual int Save() => _db.SaveChanges();
 
+        public IQueryable<TRelationalEntity> Query<TRelationalEntity>() where TRelationalEntity : Entity, new()
+        {
+            return _db.Set<TRelationalEntity>().AsNoTracking();
+        }
+
+        protected void Delete<TRelationalEntity>(List<TRelationalEntity> relationalEntities) where TRelationalEntity : Entity, new()
+        {
+            _db.Set<TRelationalEntity>().RemoveRange(relationalEntities);
+        }
+
         public void Dispose()
         {
             _db.Dispose();

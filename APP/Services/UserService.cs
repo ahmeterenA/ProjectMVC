@@ -12,29 +12,45 @@ public class UserService : Service<User>, IService<UserRequest,UserResponse>
     {
     }
 
+    protected override IQueryable<User> Query(bool isNoTracking = true)
+    {
+        return base.Query(isNoTracking)
+            .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+            .Include(u => u.Group)
+            .OrderByDescending(u => u.IsActive).ThenBy(u => u.RegistrationDate).ThenBy(u => u.UserName);
+    }
+
     public List<UserResponse> List()
     {
-        return Query().Select(u => new UserResponse()
-        {
-            Id = u.Id,
-            Guid = u.Guid,
-            UserName = u.UserName,
-            FirstName = u.FirstName,
-            LastName = u.LastName,
-            Gender = u.Gender,
-            BirthDate = u.BirthDate,
-            RegistrationDate = u.RegistrationDate,
-            Score = u.Score,
-            IsActive = u.IsActive,
-            Address = u.Address,
-            GroupId = u.GroupId,
-            RoleIds = u.RoleIds
-        }).ToList();
+        return Query()
+            .Select(u => new UserResponse()
+            {
+                Id = u.Id,
+                Guid = u.Guid,
+                UserName = u.UserName,
+                FullName = u.FirstName + " " + u.LastName,
+                Gender = u.Gender,
+                GenderF = u.Gender.ToString(),
+                BirthDate = u.BirthDate,
+                BirthDateF = u.BirthDate.HasValue ? u.BirthDate.Value.ToString("MM/dd/yyyy") : "",
+                RegistrationDate = u.RegistrationDate,
+                RegistrationDateF = u.RegistrationDate.ToString("MM/dd/yyyy"),
+                Score = u.Score,
+                ScoreF = u.Score.ToString("N1"),
+                IsActive = u.IsActive,
+                IsActiveF = u.IsActive ? "Active" : "Inactive",
+                Address = u.Address,
+                GroupId = u.GroupId,
+                Group = u.Group != null ? u.Group.Title : "",
+                RoleIds = u.UserRoles.Select(ur => ur.RoleId).ToList(),
+                Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
+            }).ToList();
     }
 
     public UserResponse Item(int id)
     {
-        var entity = Query().SingleOrDefault(u => u.Id == id);
+        var entity = Query()
+            .SingleOrDefault(u => u.Id == id);
         if (entity is null)
             return null;
         return new UserResponse
@@ -44,15 +60,21 @@ public class UserService : Service<User>, IService<UserRequest,UserResponse>
             UserName = entity.UserName,
             Password = entity.Password,
             IsActive = entity.IsActive,
-            FirstName = entity.FirstName,
-            LastName = entity.LastName,
+            IsActiveF = entity.IsActive ? "Active" : "Inactive",
+            FullName = entity.FirstName + " " + entity.LastName,
             Gender = entity.Gender,
+            GenderF = entity.Gender.ToString(),
             BirthDate = entity.BirthDate,
+            BirthDateF = entity.BirthDate.HasValue ? entity.BirthDate.Value.ToString("MM/dd/yyyy") : "",
             RegistrationDate = entity.RegistrationDate,
+            RegistrationDateF = entity.RegistrationDate.ToString("MM/dd/yyyy"),
             Score = entity.Score,
+            ScoreF = entity.Score.ToString("N1"),
             Address = entity.Address,
             GroupId = entity.GroupId,
-            RoleIds = entity.RoleIds,
+            Group = entity.Group != null ? entity.Group.Title : "",
+            RoleIds = entity.UserRoles.Select(ur => ur.RoleId).ToList(),
+            Roles = entity.UserRoles.Select(ur => ur.Role.Name).ToList()
         };
     }
 
@@ -105,9 +127,13 @@ public class UserService : Service<User>, IService<UserRequest,UserResponse>
     {
         if (Query().Any(u => u.Id != request.Id && u.UserName == request.UserName.Trim() && u.IsActive == request.IsActive))
             return Error("User with the same user name already exists!");
-        var entity = Query(false).SingleOrDefault(u => u.Id == request.Id);
+        var entity = Query(false)
+            .SingleOrDefault(u => u.Id == request.Id);
         if (entity is null)
             return Error("User not found!");
+        
+        Delete(entity.UserRoles);
+
         entity.UserName = request.UserName;
         entity.Password = request.Password;
         entity.FirstName = request.FirstName?.Trim();
@@ -119,6 +145,7 @@ public class UserService : Service<User>, IService<UserRequest,UserResponse>
         entity.Address = request.Address?.Trim();
         entity.GroupId = request.GroupId;
         entity.RoleIds = request.RoleIds;
+        
         Update(entity);
         return Success("User updated successfully", entity.Id);
     }
@@ -128,8 +155,9 @@ public class UserService : Service<User>, IService<UserRequest,UserResponse>
     {
         var entity = Query(false).SingleOrDefault(u => u.Id == id);
         if (entity is null)
-            return Error("User not found with the id"+id);
+            return Error("User not found!");
+        Delete(entity.UserRoles);
         Delete(entity);
-        return Success("User deleted successfully", entity.Id);
+        return Success("User deleted successfully.", entity.Id);
     }
 }

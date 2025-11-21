@@ -15,3 +15,4 @@
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/APP/obj/Debug/net8.0/ref/APP.dll
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/APP/bin/Debug/net8.0/APP.runtimeconfig.json
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/APP/obj/Debug/net8.0/APP.genruntimeconfig.cache
+/Users/ahmeteren/RiderProjects/AhmetEren_HW/APP/obj/Debug/net8.0/APP.sourcelink.json

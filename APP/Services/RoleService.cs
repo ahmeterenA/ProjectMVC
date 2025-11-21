@@ -12,6 +12,11 @@ public class RoleService : Service<Role>, IService<RoleRequest,RoleResponse>
     {
     }
 
+    protected override IQueryable<Role> Query(bool isNoTracking = true)
+    {
+        return base.Query(isNoTracking).Include(r => r.UserRoles).ThenInclude(ur => ur.User).OrderBy(r => r.Name);
+    }
+
     public CommandResponse Create(RoleRequest request)
     {
         if (Query().Any(r => r.Name == request.Name.Trim()))
@@ -29,7 +34,7 @@ public class RoleService : Service<Role>, IService<RoleRequest,RoleResponse>
         var entity = Query(false).SingleOrDefault(r => r.Id == id);
         if (entity is null)
             return Error("Role not found");
-        //Delete(entity.UserRoles);
+        Delete(entity.UserRoles);
         Delete(entity);
         return Success("Role deleted successfully", entity.Id);
     }

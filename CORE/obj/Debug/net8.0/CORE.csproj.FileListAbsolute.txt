@@ -12,3 +12,4 @@
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/CORE/obj/Debug/net8.0/CORE.pdb
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/CORE/obj/Debug/net8.0/CORE.genruntimeconfig.cache
 /Users/ahmeteren/RiderProjects/AhmetEren_HW/CORE/obj/Debug/net8.0/ref/CORE.dll
+/Users/ahmeteren/RiderProjects/AhmetEren_HW/CORE/obj/Debug/net8.0/CORE.sourcelink.json

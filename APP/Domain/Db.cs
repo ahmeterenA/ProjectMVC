@@ -9,6 +9,9 @@ namespace APP.Domain
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
         
         
         public Db(DbContextOptions options) : base(options)
@@ -22,6 +25,8 @@ namespace APP.Domain
             modelBuilder.Entity<Group>().HasIndex(groupEntity => groupEntity.Title).IsUnique();
 
             modelBuilder.Entity<Role>().HasIndex(roleEntity => roleEntity.Name).IsUnique();
+            
+            modelBuilder.Entity<Project>().HasIndex(projectEntity => projectEntity.Name).IsUnique();
 
             modelBuilder.Entity<User>().HasIndex(userEntity => userEntity.UserName).IsUnique();
             
@@ -47,7 +52,25 @@ namespace APP.Domain
                 .WithMany(groupEntity => groupEntity.Users) 
                 .HasForeignKey(userEntity => userEntity.GroupId) 
                                                                  
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
+                
+            modelBuilder.Entity<ProjectUser>()
+                .HasOne(projectUserEntity => projectUserEntity.User)
+                .WithMany(userEntity => userEntity.ProjectUsers)
+                .HasForeignKey(projectUserEntity => projectUserEntity.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ProjectUser>()
+                .HasOne(projectUserEntity => projectUserEntity.Project)
+                .WithMany(projectEntity => projectEntity.ProjectUsers)
+                .HasForeignKey(projectUserEntity => projectUserEntity.ProjectId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Task>()
+                .HasOne(taskEntity => taskEntity.Project)
+                .WithMany(projectEntity => projectEntity.Tasks)
+                .HasForeignKey(taskEntity => taskEntity.ProjectId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

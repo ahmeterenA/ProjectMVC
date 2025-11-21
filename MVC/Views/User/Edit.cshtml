@@ -6,20 +6,9 @@
 
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
-    var dateTimePickerClass = "datetimepicker"; // "jquery-datetimepicker" must be added as client side library
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "User Edit";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>User Edit</title>
-</head>
-<body>
 @if (Model is not null)
 {
 <div class="@containerDivClass">
@@ -76,7 +65,7 @@
         <div class="row mb-3">
             <label asp-for="BirthDate" class="col-2 col-form-label fw-bold"></label>
 	        <div class="col-10">
-		        <input asp-for="BirthDate" class="form-control @dateTimePickerClass" type="text" />
+		        <input asp-for="BirthDate" class="form-control datetimepicker" type="text" />
 		        <span asp-validation-for="BirthDate" class="text-danger"></span>
 	        </div>
         </div>
@@ -88,7 +77,7 @@
 	        </div>
         </div>
         <div class="row mb-3">
-		    <label asp-for="IsActive" class="col-2 col-form-label fw-bold"></label>
+		    <label class="col-2 col-form-label fw-bold">Status</label>
 		    <div class="col-10 pt-2">
 			    <input class="form-check-input" asp-for="IsActive" />
             </div>
@@ -112,7 +101,7 @@
         <div class="row mb-3">
             <label asp-for="RoleIds" class="col-2 col-form-label fw-bold"></label>
 	        <div class="col-10">
-	            <input asp-for="RoleIds" class="form-control" />
+		        <select multiple asp-for="RoleIds" class="form-select select2" asp-items="ViewBag.RoleIds"></select>
 		        <span asp-validation-for="RoleIds" class="text-danger"></span>
 	        </div>
         </div>
@@ -145,5 +134,22 @@
 </div>
 }
 
-</body>
-</html>
+@section Scripts {
+    <link href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
+    <script>
+        $(function () {
+            $(".datetimepicker").datetimepicker({
+                timepicker: false,
+                format: 'm/d/Y'
+            });
+        });
+    </script>
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script>
+        $(function() {
+            $("select").select2();
+        });
+    </script>
+}

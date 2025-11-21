@@ -6,19 +6,9 @@
 @{
     var containerDivClass = "container"; // "container-fluid" can be used for full width
     var dateTimePickerClass = "datetimepicker"; // "jquery-datetimepicker" must be added as client side library
-}
-@{
-    Layout = null;
+    ViewData["Title"] = "Role Edit";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Role Edit</title>
-</head>
-<body>
 @if (Model is not null)
 {
 <div class="@containerDivClass">
@@ -69,6 +59,3 @@
     </form>
 </div>
 }
-
-</body>
-</html>
