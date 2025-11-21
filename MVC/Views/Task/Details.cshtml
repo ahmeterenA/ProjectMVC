@@ -1,0 +1,61 @@
+@model APP.Models.TaskResponse
+
+@* Generated from Custom MVC Template. *@
+@* Model namespace using directive should be added to _ViewImports.cshtml. *@
+
+@{
+    var containerDivClass = "container"; // "container-fluid" can be used for full width
+    ViewData["Title"] = "Task Details";
+}
+
+@if (Model is not null)
+{
+<div class="@containerDivClass">
+    @if (TempData["Message"] is not null)
+    {
+    /*
+    TempData is used to carry extra data to the redirected controller action's view.
+    */
+    <p class="text-danger">
+        @TempData["Message"]
+    </p>
+    }
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.Title)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.Title)
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.Description)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.Description)
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.DueDate)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.DueDate)
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.Status)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.Status)
+        </div>
+    </div>
+
+    <hr /> 
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>&nbsp;|&nbsp;
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>&nbsp;|&nbsp;
+    <a asp-action="Index">Back to List</a>
+</div>
+}
