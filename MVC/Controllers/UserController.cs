@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CORE.APP.Services;
 using APP.Models;
+using APP.Services;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom MVC Template.
 
@@ -10,141 +12,167 @@ namespace MVC.Controllers
 {
     public class UserController : Controller
     {
-        // Service injections:
         private readonly IService<UserRequest, UserResponse> _userService;
-        private readonly IService<GroupRequest, GroupResponse> _groupService;
         private readonly IService<RoleRequest, RoleResponse> _roleService;
-
-        /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
-        //private readonly IService<EntityRequest, EntityResponse> _EntityService;
+        private readonly IService<GroupRequest, GroupResponse> _groupService;
 
         public UserController(
-			IService<UserRequest, UserResponse> userService
-            , IService<GroupRequest, GroupResponse> groupService
-            , IService<RoleRequest, RoleResponse> roleService
-
-            /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
-            //, IService<EntityRequest, EntityResponse> EntityService
+            IService<UserRequest, UserResponse> userService,
+            IService<RoleRequest, RoleResponse> roleService,
+            IService<GroupRequest, GroupResponse> groupService
         )
         {
             _userService = userService;
-            _groupService = groupService;
             _roleService = roleService;
+            _groupService = groupService;
+        }
 
-            /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
-            //_EntityService = EntityService;
+        [AllowAnonymous]
+        [Route("/Login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("/Login")]
+        public async Task<IActionResult> Login(UserLoginRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var userService = _userService as UserService;
+                var response = await userService.Login(request);
+                if (response.IsSuccessful)
+                    return RedirectToAction("Index", "Home");
+                ModelState.AddModelError("", response.Message);
+            }
+            return View();
+        }
+
+        [Authorize]
+        [Route("/Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userService = _userService as UserService;
+            await userService.Logout();
+            return RedirectToAction(nameof(Login));
+        }
+
+        [AllowAnonymous]
+        [Route("/Register")]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost, ValidateAntiForgeryToken]
+        [Route("/Register")]
+        public IActionResult Register(UserRegisterRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var userService = _userService as UserService;
+                var response = userService.Register(request);
+                if (response.IsSuccessful)
+                    return RedirectToAction(nameof(Login));
+                ModelState.AddModelError("", response.Message);
+            }
+            return View();
         }
 
         private void SetViewData()
         {
-            /* 
-            ViewBag and ViewData are the same collection (dictionary).
-            They carry extra data other than the model from a controller action to its view, or between views.
-            */
-
-            // Related items service logic to set ViewData (Id and Name parameters may need to be changed in the SelectList constructor according to the model):
             ViewData["GroupId"] = new SelectList(_groupService.List(), "Id", "Title");
             ViewBag.RoleIds = new MultiSelectList(_roleService.List(), "Id", "Name");
-
-            /* Can be uncommented and used for many to many relationships, "entity" may be replaced with the related entity name in the controller and views. */
-            //ViewBag.EntityIds = new MultiSelectList(_EntityService.List(), "Id", "Name");
         }
 
         private void SetTempData(string message, string key = "Message")
         {
-            /*
-            TempData is used to carry extra data to the redirected controller action's view.
-            */
-
             TempData[key] = message;
         }
 
-        // GET: User
+        [Authorize]
         public IActionResult Index()
         {
-            // Get collection service logic:
             var list = _userService.List();
-            return View(list); // return response collection as model to the Index view
+            return View(list);
         }
 
-        // GET: User/Details/5
+        [Authorize]
         public IActionResult Details(int id)
         {
-            // Get item service logic:
             var item = _userService.Item(id);
-            return View(item); // return response item as model to the Details view
+            return View(item);
         }
 
-        // GET: User/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            SetViewData(); // set ViewData dictionary to carry extra data other than the model to the view
-            return View(); // return Create view with no model
+            SetViewData();
+            return View();
         }
 
-        // POST: User/Create
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(UserRequest user)
         {
-            if (ModelState.IsValid) // check data annotation validation errors in the request
+            if (ModelState.IsValid)
             {
-                // Insert item service logic:
                 var response = _userService.Create(user);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message); // set TempData dictionary to carry the message to the redirected action's view
-                    return RedirectToAction(nameof(Details), new { id = response.Id }); // redirect to Details action with id parameter as response.Id route value
+                    SetTempData(response.Message);
+                    return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
-                ModelState.AddModelError("", response.Message); // to display service error message in the validation summary of the view
+                ModelState.AddModelError("", response.Message);
             }
-            SetViewData(); // set ViewData dictionary to carry extra data other than the model to the view
-            return View(user); // return request as model to the Create view
+            SetViewData();
+            return View(user);
         }
 
-        // GET: User/Edit/5
+        [Authorize]
         public IActionResult Edit(int id)
         {
-            // Get item to edit service logic:
             var item = _userService.Edit(id);
-            SetViewData(); // set ViewData dictionary to carry extra data other than the model to the view
-            return View(item); // return request as model to the Edit view
+            SetViewData();
+            return View(item);
         }
 
-        // POST: User/Edit
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult Edit(UserRequest user)
         {
-            if (ModelState.IsValid) // check data annotation validation errors in the request
+            if (ModelState.IsValid)
             {
-                // Update item service logic:
                 var response = _userService.Update(user);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message); // set TempData dictionary to carry the message to the redirected action's view
-                    return RedirectToAction(nameof(Details), new { id = response.Id }); // redirect to Details action with id parameter as response.Id route value
+                    SetTempData(response.Message);
+                    return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
-                ModelState.AddModelError("", response.Message); // to display service error message in the validation summary of the view
+                ModelState.AddModelError("", response.Message);
             }
-            SetViewData(); // set ViewData dictionary to carry extra data other than the model to the view
-            return View(user); // return request as model to the Edit view
+            SetViewData();
+            return View(user);
         }
 
-        // GET: User/Delete/5
+        [Authorize]
         public IActionResult Delete(int id)
         {
-            // Get item to delete service logic:
             var item = _userService.Item(id);
-            return View(item); // return response item as model to the Delete view
+            return View(item);
         }
 
-        // POST: User/Delete
         [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
+        [Authorize]
         public IActionResult DeleteConfirmed(int id)
         {
-            // Delete item service logic:
             var response = _userService.Delete(id);
-            SetTempData(response.Message); // set TempData dictionary to carry the message to the redirected action's view
-            return RedirectToAction(nameof(Index)); // redirect to the Index action
+            SetTempData(response.Message);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
+

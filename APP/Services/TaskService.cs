@@ -8,8 +8,18 @@ namespace APP.Services;
 
 public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskResponse>
 {
+    private readonly DbContext _context;
+
     public TaskService(DbContext db) : base(db)
     {
+        _context = db;
+    }
+
+    protected override IQueryable<APP.Domain.Task> Query(bool isNoTracking = true)
+    {
+        return base.Query(isNoTracking)
+            .Include(t => t.Project)
+            .Include(t => t.TaskUsers).ThenInclude(tu => tu.User);
     }
 
     public List<TaskResponse> List()
@@ -23,7 +33,9 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
             DueDate = t.DueDate,
             Status = t.Status,
             ProjectId = t.ProjectId,
-            UserId = t.UserId
+            ProjectName = t.Project.Name,
+            UserIds = t.UserIds,
+            UserNames = string.Join(", ", t.TaskUsers.Select(tu => tu.User.UserName))
         }).ToList();
     }
 
@@ -41,7 +53,9 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
             DueDate = entity.DueDate,
             Status = entity.Status,
             ProjectId = entity.ProjectId,
-            UserId = entity.UserId
+            ProjectName = entity.Project.Name,
+            UserIds = entity.UserIds,
+            UserNames = string.Join(", ", entity.TaskUsers.Select(tu => tu.User.UserName))
         };
     }
 
@@ -58,7 +72,7 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
             DueDate = entity.DueDate,
             Status = entity.Status,
             ProjectId = entity.ProjectId,
-            UserId = entity.UserId
+            UserIds = entity.UserIds
         };
     }
 
@@ -71,7 +85,7 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
             DueDate = request.DueDate,
             Status = request.Status,
             ProjectId = request.ProjectId,
-            UserId = request.UserId
+            UserIds = request.UserIds
         };
         Create(entity);
         return Success("Task created successfully.", entity.Id);
@@ -82,12 +96,17 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
         var entity = Query(false).SingleOrDefault(t => t.Id == request.Id);
         if (entity is null)
             return Error("Task not found!");
+        
+        var existingTaskUsers = _context.Set<TaskUser>().Where(tu => tu.TaskId == request.Id);
+        _context.Set<TaskUser>().RemoveRange(existingTaskUsers);
+
         entity.Title = request.Title;
         entity.Description = request.Description;
         entity.DueDate = request.DueDate;
         entity.Status = request.Status;
         entity.ProjectId = request.ProjectId;
-        entity.UserId = request.UserId;
+        entity.UserIds = request.UserIds;
+        
         Update(entity);
         return Success("Task updated successfully", entity.Id);
     }
@@ -97,6 +116,10 @@ public class TaskService : Service<APP.Domain.Task>, IService<TaskRequest, TaskR
         var entity = Query(false).SingleOrDefault(t => t.Id == id);
         if (entity is null)
             return Error("Task not found with the id " + id);
+        
+        var existingTaskUsers = _context.Set<TaskUser>().Where(tu => tu.TaskId == id);
+        _context.Set<TaskUser>().RemoveRange(existingTaskUsers);
+        
         Delete(entity);
         return Success("Task deleted successfully", entity.Id);
     }

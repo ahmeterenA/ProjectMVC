@@ -22,6 +22,7 @@ public class TaskRequest : Request
     [DisplayName("Project")]
     public int ProjectId { get; set; }
 
-    [DisplayName("Assigned User")]
-    public int? UserId { get; set; }
+    [DisplayName("Assigned Users")]
+    public List<int> UserIds { get; set; }
 }
+

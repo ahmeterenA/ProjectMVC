@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CORE.APP.Services;
 using APP.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class TaskController : Controller
     {
         private readonly IService<TaskRequest, TaskResponse> _taskService;
@@ -26,12 +28,7 @@ namespace MVC.Controllers
         private void SetViewData()
         {
             ViewData["ProjectId"] = new SelectList(_projectService.List(), "Id", "Name");
-            ViewData["UserId"] = new SelectList(_userService.List(), "Id", "UserName");
-        }
-
-        private void SetTempData(string message, string key = "Message")
-        {
-            TempData[key] = message;
+            ViewBag.UserIds = new MultiSelectList(_userService.List(), "Id", "UserName");
         }
 
         // GET: Task
@@ -64,7 +61,7 @@ namespace MVC.Controllers
                 var response = _taskService.Create(task);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message);
+                    TempData["Message"] = response.Message;
                     return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
                 ModelState.AddModelError("", response.Message);
@@ -90,7 +87,7 @@ namespace MVC.Controllers
                 var response = _taskService.Update(task);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message);
+                    TempData["Message"] = response.Message;
                     return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
                 ModelState.AddModelError("", response.Message);
@@ -111,7 +108,7 @@ namespace MVC.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             var response = _taskService.Delete(id);
-            SetTempData(response.Message);
+            TempData["Message"] = response.Message;
             return RedirectToAction(nameof(Index));
         }
     }

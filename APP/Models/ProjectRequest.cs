@@ -18,8 +18,5 @@ public class ProjectRequest : Request
 
     [DisplayName("End Date")]
     public DateTime EndDate { get; set; }
-
-    [Required(ErrorMessage = "{0} is required!")]
-    [DisplayName("Users")]
-    public List<int> UserIds { get; set; }
 }
+

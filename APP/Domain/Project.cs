@@ -17,13 +17,5 @@ public class Project : Entity
     public DateTime EndDate { get; set; }
 
     public List<Task> Tasks { get; set; } = new List<Task>();
-    
-    public List<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
-
-    [NotMapped]
-    public List<int> UserIds
-    {
-        get => ProjectUsers.Select(projectUser => projectUser.UserId).ToList();
-        set => ProjectUsers = value?.Select(userId => new ProjectUser() { UserId = userId }).ToList();
-    }
 }
+

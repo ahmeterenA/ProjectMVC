@@ -52,6 +52,22 @@
             @Html.DisplayFor(model => model.Status)
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.ProjectName)
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 fw-bold">
+            @Html.DisplayNameFor(model => model.UserNames)
+        </div>
+        <div class="col-10">
+            @Html.DisplayFor(model => model.UserNames)
+        </div>
+    </div>
 
     <hr /> 
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>&nbsp;|&nbsp;

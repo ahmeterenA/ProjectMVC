@@ -45,12 +45,19 @@ public class User : Entity
 
     public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
     
-    public List<ProjectUser> ProjectUsers { get; set; } = new List<ProjectUser>();
+    public List<TaskUser> TaskUsers { get; set; } = new List<TaskUser>();
 
     [NotMapped]
     public List<int> RoleIds
     {
         get => UserRoles.Select(userRoleEntity => userRoleEntity.RoleId).ToList();
         set => UserRoles = value?.Select(roleId => new UserRole() { RoleId = roleId }).ToList();
+    }
+
+    [NotMapped]
+    public List<int> TaskIds
+    {
+        get => TaskUsers.Select(taskUserEntity => taskUserEntity.TaskId).ToList();
+        set => TaskUsers = value?.Select(taskId => new TaskUser() { TaskId = taskId }).ToList();
     }
 }

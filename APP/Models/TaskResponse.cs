@@ -18,6 +18,14 @@ public class TaskResponse : Response
     [DisplayName("Project")]
     public int ProjectId { get; set; }
 
-    [DisplayName("Assigned User")]
-    public int? UserId { get; set; }
+    [DisplayName("Project")]
+    public string ProjectName { get; set; }
+
+    [DisplayName("Assigned Users")]
+    public List<int> UserIds { get; set; }
+
+    [DisplayName("Assigned Users")]
+    public string UserNames { get; set; }
 }
+
+

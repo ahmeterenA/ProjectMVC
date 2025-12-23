@@ -61,12 +61,10 @@
 			</div>
         </div>
         <div class="row mb-3">
-            <label asp-for="UserId" class="col-2 col-form-label fw-bold"></label>
+            <label asp-for="UserIds" class="col-2 col-form-label fw-bold"></label>
 			<div class="col-10">
-				<select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
-					<option value="">-- Select --</option>
-				</select>
-				<span asp-validation-for="UserId" class="text-danger"></span>
+				<select multiple asp-for="UserIds" class="form-select select2" asp-items="ViewBag.UserIds"></select>
+				<span asp-validation-for="UserIds" class="text-danger"></span>
 			</div>
         </div>
         <input type="hidden" asp-for="Id" />

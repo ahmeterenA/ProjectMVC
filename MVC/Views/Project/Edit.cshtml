@@ -51,13 +51,6 @@
 		        <span asp-validation-for="EndDate" class="text-danger"></span>
 	        </div>
         </div>
-        <div class="row mb-3">
-	        <label asp-for="UserIds" class="col-2 col-form-label fw-bold"></label>
-	        <div class="col-10">
-		        <select multiple asp-for="UserIds" class="form-select select2" asp-items="ViewBag.UserIds"></select>
-		        <span asp-validation-for="UserIds" class="text-danger"></span>
-	        </div>
-        </div>
         <input type="hidden" asp-for="Id" />
 
         <hr />

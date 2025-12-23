@@ -3,31 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CORE.APP.Services;
 using APP.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class ProjectController : Controller
     {
         private readonly IService<ProjectRequest, ProjectResponse> _projectService;
-        private readonly IService<UserRequest, UserResponse> _userService;
 
         public ProjectController(
-            IService<ProjectRequest, ProjectResponse> projectService,
-            IService<UserRequest, UserResponse> userService
+            IService<ProjectRequest, ProjectResponse> projectService
         )
         {
             _projectService = projectService;
-            _userService = userService;
-        }
-
-        private void SetViewData()
-        {
-            ViewBag.UserIds = new MultiSelectList(_userService.List(), "Id", "UserName");
-        }
-
-        private void SetTempData(string message, string key = "Message")
-        {
-            TempData[key] = message;
         }
 
         // GET: Project
@@ -47,7 +36,6 @@ namespace MVC.Controllers
         // GET: Project/Create
         public IActionResult Create()
         {
-            SetViewData();
             return View();
         }
 
@@ -60,12 +48,11 @@ namespace MVC.Controllers
                 var response = _projectService.Create(project);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message);
+                    TempData["Message"] = response.Message;
                     return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
                 ModelState.AddModelError("", response.Message);
             }
-            SetViewData();
             return View(project);
         }
 
@@ -73,7 +60,6 @@ namespace MVC.Controllers
         public IActionResult Edit(int id)
         {
             var item = _projectService.Edit(id);
-            SetViewData();
             return View(item);
         }
 
@@ -86,12 +72,11 @@ namespace MVC.Controllers
                 var response = _projectService.Update(project);
                 if (response.IsSuccessful)
                 {
-                    SetTempData(response.Message);
+                    TempData["Message"] = response.Message;
                     return RedirectToAction(nameof(Details), new { id = response.Id });
                 }
                 ModelState.AddModelError("", response.Message);
             }
-            SetViewData();
             return View(project);
         }
 
@@ -107,7 +92,7 @@ namespace MVC.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             var response = _projectService.Delete(id);
-            SetTempData(response.Message);
+            TempData["Message"] = response.Message;
             return RedirectToAction(nameof(Index));
         }
     }

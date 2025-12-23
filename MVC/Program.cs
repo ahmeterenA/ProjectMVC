@@ -2,23 +2,44 @@ using APP.Domain;
 using APP.Models;
 using APP.Services;
 using CORE.APP.Services;
+using CORE.APP.Services.Authentication;
+using CORE.APP.Services.Session;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-var connectionString = builder.Configuration.GetConnectionString(nameof(Db));
+
+var connectionString = builder.Configuration.GetConnectionString("Db");
 builder.Services.AddDbContext<DbContext, Db>(options => options.UseSqlite(connectionString));
 
-builder.Services.AddScoped<IService<UserRequest,UserResponse>,UserService>();
-builder.Services.AddScoped<IService<GroupRequest,GroupResponse>,GroupService>();
-builder.Services.AddScoped<IService<RoleRequest,RoleResponse>,RoleService>();
+builder.Services.AddScoped<ICookieAuthService, CookieAuthService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<SessionServiceBase, SessionService>();
+
+builder.Services.AddScoped<IService<GroupRequest, GroupResponse>, GroupService>();
+builder.Services.AddScoped<IService<RoleRequest, RoleResponse>, RoleService>();
+builder.Services.AddScoped<IService<UserRequest, UserResponse>, UserService>();
 builder.Services.AddScoped<IService<ProjectRequest, ProjectResponse>, ProjectService>();
 builder.Services.AddScoped<IService<TaskRequest, TaskResponse>, TaskService>();
 
+// Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.SlidingExpiration = true;
+    });
 
-builder.Services.AddControllersWithViews();
+// Session
+builder.Services.AddSession(config =>
+{
+    config.IdleTimeout = TimeSpan.FromMinutes(30);
+});
 
 var app = builder.Build();
 
@@ -35,7 +56,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

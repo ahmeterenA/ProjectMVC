@@ -18,7 +18,7 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
     protected override IQueryable<Project> Query(bool isNoTracking = true)
     {
         return base.Query(isNoTracking)
-            .Include(p => p.ProjectUsers).ThenInclude(pu => pu.User)
+            .Include(p => p.Tasks)
             .OrderBy(p => p.Name);
     }
 
@@ -31,8 +31,7 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
             Name = p.Name,
             Description = p.Description,
             StartDate = p.StartDate,
-            EndDate = p.EndDate,
-            UserIds = p.UserIds
+            EndDate = p.EndDate
         }).ToList();
     }
 
@@ -48,8 +47,7 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
             Name = entity.Name,
             Description = entity.Description,
             StartDate = entity.StartDate,
-            EndDate = entity.EndDate,
-            UserIds = entity.UserIds
+            EndDate = entity.EndDate
         };
     }
 
@@ -64,8 +62,7 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
             Name = entity.Name,
             Description = entity.Description,
             StartDate = entity.StartDate,
-            EndDate = entity.EndDate,
-            UserIds = entity.UserIds
+            EndDate = entity.EndDate
         };
     }
 
@@ -78,8 +75,7 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
             Name = request.Name.Trim(),
             Description = request.Description,
             StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            UserIds = request.UserIds
+            EndDate = request.EndDate
         };
         Create(entity);
         return Success("Project created successfully.", entity.Id);
@@ -93,14 +89,10 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
         if (entity is null)
             return Error("Project not found!");
         
-        var existingProjectUsers = _context.Set<ProjectUser>().Where(pu => pu.ProjectId == request.Id);
-        _context.Set<ProjectUser>().RemoveRange(existingProjectUsers);
-
         entity.Name = request.Name.Trim();
         entity.Description = request.Description;
         entity.StartDate = request.StartDate;
         entity.EndDate = request.EndDate;
-        entity.UserIds = request.UserIds;
         
         Update(entity);
         return Success("Project updated successfully", entity.Id);
@@ -111,9 +103,8 @@ public class ProjectService : Service<Project>, IService<ProjectRequest, Project
         var entity = Query(false).SingleOrDefault(p => p.Id == id);
         if (entity is null)
             return Error("Project not found with the id " + id);
-        
-        var existingProjectUsers = _context.Set<ProjectUser>().Where(pu => pu.ProjectId == id);
-        _context.Set<ProjectUser>().RemoveRange(existingProjectUsers);
+        if (entity.Tasks.Any())
+            return Error("Project cannot be deleted because it has related tasks!");
         
         Delete(entity);
         return Success("Project deleted successfully", entity.Id);

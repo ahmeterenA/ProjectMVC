@@ -15,6 +15,5 @@ public class ProjectResponse : Response
 
     [DisplayName("End Date")]
     public DateTime EndDate { get; set; }
-
-    public List<int> UserIds { get; set; }
 }
+

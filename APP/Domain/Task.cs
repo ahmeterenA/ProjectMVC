@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using CORE.APP.Domain;
 
 namespace APP.Domain;
@@ -18,6 +19,12 @@ public class Task : Entity
     public int ProjectId { get; set; }
     public Project Project { get; set; }
 
-    public int? UserId { get; set; }
-    public User User { get; set; }
+    public List<TaskUser> TaskUsers { get; set; } = new List<TaskUser>();
+
+    [NotMapped]
+    public List<int> UserIds
+    {
+        get => TaskUsers.Select(taskUser => taskUser.UserId).ToList();
+        set => TaskUsers = value?.Select(userId => new TaskUser() { UserId = userId }).ToList();
+    }
 }

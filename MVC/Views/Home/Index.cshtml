@@ -1,8 +1,54 @@
-﻿@{
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold">Welcome to Project Manager</h1>
+        <p class="col-md-8 fs-4 mx-auto">
+            Efficiently manage your projects, track tasks, and collaborate with your team in one centralized platform.
+        </p>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="d-flex justify-content-center gap-3">
+                <a class="btn btn-primary btn-lg" asp-controller="User" asp-action="Login" role="button">Login</a>
+                <a class="btn btn-outline-secondary btn-lg" asp-controller="User" asp-action="Register" role="button">Register</a>
+            </div>
+        }
+        else
+        {
+             <a class="btn btn-primary btn-lg" asp-controller="Project" asp-action="Index" role="button">Go to Projects</a>
+        }
+    </div>
+</div>
+
+<div class="row align-items-md-stretch">
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Projects</h2>
+            <p>Create and organize projects. Keep track of deadlines and progress effortlessly.</p>
+            <a class="btn btn-outline-light" asp-controller="Project" asp-action="Index">Manage Projects</a>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Tasks</h2>
+            <p>Assign tasks to team members, set priorities, and monitor status updates in real-time.</p>
+            <a class="btn btn-outline-secondary" asp-controller="Task" asp-action="Index">View Tasks</a>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 text-white bg-secondary rounded-3">
+            <h2>Teams</h2>
+            <p>Collaborate with users and groups. Manage roles and permissions for secure access.</p>
+             @if (User.Identity.IsAuthenticated)
+             {
+                <a class="btn btn-outline-light" asp-controller="User" asp-action="Index">View Users</a>
+             }
+             else
+             {
+                 <a class="btn btn-outline-light" asp-controller="User" asp-action="Login">Login to View</a>
+             }
+        </div>
+    </div>
 </div>

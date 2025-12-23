@@ -11,7 +11,7 @@ namespace APP.Domain
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }
-        public DbSet<ProjectUser> ProjectUsers { get; set; }
+        public DbSet<TaskUser> TaskUsers { get; set; }
         
         
         public Db(DbContextOptions options) : base(options)
@@ -53,17 +53,17 @@ namespace APP.Domain
                 .HasForeignKey(userEntity => userEntity.GroupId) 
                                                                  
                 .OnDelete(DeleteBehavior.NoAction);
-                
-            modelBuilder.Entity<ProjectUser>()
-                .HasOne(projectUserEntity => projectUserEntity.User)
-                .WithMany(userEntity => userEntity.ProjectUsers)
-                .HasForeignKey(projectUserEntity => projectUserEntity.UserId)
+
+            modelBuilder.Entity<TaskUser>()
+                .HasOne(taskUserEntity => taskUserEntity.User)
+                .WithMany(userEntity => userEntity.TaskUsers)
+                .HasForeignKey(taskUserEntity => taskUserEntity.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<ProjectUser>()
-                .HasOne(projectUserEntity => projectUserEntity.Project)
-                .WithMany(projectEntity => projectEntity.ProjectUsers)
-                .HasForeignKey(projectUserEntity => projectUserEntity.ProjectId)
+            modelBuilder.Entity<TaskUser>()
+                .HasOne(taskUserEntity => taskUserEntity.Task)
+                .WithMany(taskEntity => taskEntity.TaskUsers)
+                .HasForeignKey(taskUserEntity => taskUserEntity.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Task>()

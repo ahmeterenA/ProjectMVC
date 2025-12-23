@@ -74,31 +74,6 @@ namespace APP.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("APP.Domain.ProjectUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Guid")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProjectUsers");
-                });
-
             modelBuilder.Entity("APP.Domain.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -150,16 +125,36 @@ namespace APP.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("APP.Domain.TaskUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("TaskUsers");
                 });
 
             modelBuilder.Entity("APP.Domain.User", b =>
@@ -250,25 +245,6 @@ namespace APP.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("APP.Domain.ProjectUser", b =>
-                {
-                    b.HasOne("APP.Domain.Project", "Project")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("APP.Domain.User", "User")
-                        .WithMany("ProjectUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("APP.Domain.Task", b =>
                 {
                     b.HasOne("APP.Domain.Project", "Project")
@@ -277,11 +253,24 @@ namespace APP.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("APP.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("APP.Domain.TaskUser", b =>
+                {
+                    b.HasOne("APP.Domain.Task", "Task")
+                        .WithMany("TaskUsers")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("APP.Domain.User", "User")
+                        .WithMany("TaskUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Task");
 
                     b.Navigation("User");
                 });
@@ -322,8 +311,6 @@ namespace APP.Migrations
 
             modelBuilder.Entity("APP.Domain.Project", b =>
                 {
-                    b.Navigation("ProjectUsers");
-
                     b.Navigation("Tasks");
                 });
 
@@ -332,9 +319,14 @@ namespace APP.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("APP.Domain.Task", b =>
+                {
+                    b.Navigation("TaskUsers");
+                });
+
             modelBuilder.Entity("APP.Domain.User", b =>
                 {
-                    b.Navigation("ProjectUsers");
+                    b.Navigation("TaskUsers");
 
                     b.Navigation("UserRoles");
                 });

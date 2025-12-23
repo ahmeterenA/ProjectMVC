@@ -44,24 +44,17 @@
             @Html.DisplayFor(model => model.StartDate)
         </div>
     </div>
-    <div class="row mb-3">
-        <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.EndDate)
+        <div class="row mb-3">
+            <div class="col-2 fw-bold">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </div>
+            <div class="col-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </div>
         </div>
-        <div class="col-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-2 fw-bold">
-            @Html.DisplayNameFor(model => model.UserIds)
-        </div>
-        <div class="col-10">
-            @Html.DisplayFor(model => model.UserIds)
-        </div>
-    </div>
-
-    <hr /> 
+    
+        <hr />
+     
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>&nbsp;|&nbsp;
     <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>&nbsp;|&nbsp;
     <a asp-action="Index">Back to List</a>
