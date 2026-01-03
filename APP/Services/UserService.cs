@@ -179,7 +179,7 @@ namespace APP.Services
             await _cookieAuthService.SignIn(
                 entity.Id,
                 entity.UserName,
-                entity.UserRoles.Select(ur => ur.Role.Name).ToArray());
+                entity.UserRoles.Select(ur => ur.Role.Name.Trim()).ToArray());
             
             return Success("User logged in successfully.", entity.Id);
         }
